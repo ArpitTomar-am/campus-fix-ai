@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Fix - AI | Smart Issue Reporting</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-slate-900 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="bg-indigo-600 p-2.5 rounded-xl text-xl">
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight">Campus Fix<span class="text-indigo-400">-AI</span></h1>
+          <p class="text-xs text-slate-400">Smart Issue Reporting & Automated Triage</p>
+        </div>
+      </div>
+      <span class="bg-emerald-500/10 text-emerald-400 text-xs px-3 py-1 rounded-full border border-emerald-500/20 font-medium">
+        <i class="fa-solid fa-circle text-[8px] mr-1.5 animate-pulse"></i> System Online
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full space-y-8">
+
+    <!-- Hero Banner -->
+    <div class="hero-gradient rounded-2xl p-6 md:p-8 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <div class="space-y-2 max-w-2xl">
+        <span class="text-xs font-semibold uppercase tracking-wider text-indigo-300 bg-indigo-500/20 px-3 py-1 rounded-full">AI-Powered Campus Operations</span>
+        <h2 class="text-2xl md:text-3xl font-extrabold">Report Campus Infrastructure Malfunctions</h2>
+        <p class="text-slate-300 text-sm">Snap an image or describe the fault. The Multimodal Triage Agent categorizes the department, tags severity, and flags duplicates instantly.</p>
+      </div>
+    </div>
+
+    <!-- Form & Copilot Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Left: Incident Form -->
+      <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">New Incident Submission</h3>
+            <p class="text-xs text-slate-500">Provide details or test with quick presets</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="loadPreset('electrical')" class="text-xs bg-amber-50 text-amber-700 hover:bg-amber-100 px-2.5 py-1 rounded-md font-medium border border-amber-200">Electrical Demo</button>
+            <button type="button" onclick="loadPreset('plumbing')" class="text-xs bg-blue-50 text-blue-700 hover:bg-blue-100 px-2.5 py-1 rounded-md font-medium border border-blue-200">Plumbing Demo</button>
+          </div>
+        </div>
+
+        <form id="incidentForm" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Location / Room Number</label>
+            <input type="text" id="locationInput" required placeholder="e.g., Block A - Room 204" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Issue Description</label>
+            <textarea id="descInput" required rows="3" placeholder="Describe the malfunction in detail..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Attach Photo (Optional)</label>
+            <div class="upload-zone rounded-xl p-4 text-center relative cursor-pointer">
+              <input type="file" id="imageInput" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+              <div id="fileUploadPrompt" class="space-y-1">
+                <i class="fa-solid fa-cloud-arrow-up text-indigo-500 text-xl"></i>
+                <p class="text-xs text-slate-600 font-medium">Click to upload photo or drag & drop</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Department (Optional)</label>
+              <select id="deptOverride" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white">
+                <option value="AUTO" selected>✨ Auto-Detect (AI)</option>
+                <option value="Electrical Works">Electrical Works</option>
+                <option value="Plumbing & Water">Plumbing & Water</option>
+                <option value="IT Systems / AV">IT Systems / AV</option>
+                <option value="Carpentry & Civil">Carpentry & Civil</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Severity (Optional)</label>
+              <select id="severityOverride" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white">
+                <option value="AUTO" selected>✨ Auto-Detect (AI)</option>
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Run AI Triage & Submit Report</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Right: AI Triage Copilot -->
+      <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between space-y-6">
+        <div>
+          <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+            <h3 class="text-lg font-bold text-slate-900"><i class="fa-solid fa-microchip text-indigo-600 mr-2"></i>AI Triage Copilot</h3>
+            <span id="copilotStatus" class="bg-slate-100 text-slate-600 text-xs px-2.5 py-1 rounded-full font-medium">Standby</span>
+          </div>
+
+          <div class="mt-6 space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200/60">
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-500">Classified Category:</span>
+              <span id="resCategory" class="font-bold text-slate-800">--</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-500">Severity Assessment:</span>
+              <span id="resSeverity" class="font-bold text-slate-800">--</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-500">Target Department:</span>
+              <span id="resDept" class="font-bold text-slate-800">--</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-slate-500">Estimated SLA:</span>
+              <span id="resSla" class="font-bold text-slate-800">--</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="duplicateAlert" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-1">
+          <div class="text-amber-800 font-bold text-xs uppercase"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Duplicate Issue Suspected!</div>
+          <p class="text-xs text-amber-700">Similar report found in the last 6 hours. Auto-upvoted the existing ticket instead of creating a duplicate.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="kpi-card bg-white p-5 rounded-2xl border border-slate-200">
+        <p class="text-xs font-semibold text-slate-400 uppercase">Total Filed</p>
+        <h3 id="statTotal" class="text-2xl font-bold text-slate-900 mt-1">0</h3>
+      </div>
+      <div class="kpi-card bg-white p-5 rounded-2xl border border-slate-200">
+        <p class="text-xs font-semibold text-slate-400 uppercase">Pending Action</p>
+        <h3 id="statPending" class="text-2xl font-bold text-amber-600 mt-1">0</h3>
+      </div>
+      <div class="kpi-card bg-white p-5 rounded-2xl border border-slate-200">
+        <p class="text-xs font-semibold text-slate-400 uppercase">In Progress</p>
+        <h3 id="statProgress" class="text-2xl font-bold text-blue-600 mt-1">0</h3>
+      </div>
+      <div class="kpi-card bg-white p-5 rounded-2xl border border-slate-200">
+        <p class="text-xs font-semibold text-slate-400 uppercase">Resolved</p>
+        <h3 id="statResolved" class="text-2xl font-bold text-emerald-600 mt-1">0</h3>
+      </div>
+    </div>
+
+    <!-- Operations Queue Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <!-- Operations Queue Header with Search & CSV Export -->
+      <div class="p-6 border-b border-slate-100 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">Central Maintenance Operations Queue</h3>
+          <p class="text-xs text-slate-500">Live database tracking, search, and status transitions</p>
+        </div>
+        
+        <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+          <!-- Search Bar -->
+          <div class="relative flex-grow sm:flex-grow-0">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+              <i class="fa-solid fa-magnifying-glass text-xs"></i>
+            </span>
+            <input type="text" id="searchInput" placeholder="Search location or summary..." class="text-xs pl-8 pr-3 py-2 rounded-xl border border-slate-200 bg-slate-50 font-medium w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <select id="filterDept" class="text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+            <option value="ALL">All Departments</option>
+            <option value="Electrical Works">Electrical Works</option>
+            <option value="Plumbing & Water">Plumbing & Water</option>
+            <option value="IT Systems / AV">IT Systems / AV</option>
+            <option value="Carpentry & Civil">Carpentry & Civil</option>
+          </select>
+
+          <select id="filterStatus" class="text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 font-medium">
+            <option value="ALL">All Statuses</option>
+            <option value="Pending Review">Pending Review</option>
+            <option value="Assigned">Assigned</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+
+          <button onclick="exportCSV()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-file-csv"></i> Export CSV
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase">
+              <th class="py-3 px-6">Ticket ID</th>
+              <th class="py-3 px-6">Location</th>
+              <th class="py-3 px-6">Issue Summary</th>
+              <th class="py-3 px-6">Department & Severity</th>
+              <th class="py-3 px-6 text-center">Upvotes</th>
+              <th class="py-3 px-6">Status</th>
+              <th class="py-3 px-6 text-right">Quick Action</th>
+            </tr>
+          </thead>
+          <tbody id="ticketTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Node modules
+backend/node_modules/
+
+# Environment variables & Secrets
+backend/.env
+
+# Local Database & Uploads
+backend/database.json
+backend/uploads/
+
+# OS Files
+.DS_Store
+Thumbs.db
