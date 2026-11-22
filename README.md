@@ -7,6 +7,12 @@
 - **Duplicate Detection:** Prevents clutter by upvoting existing unresolved tickets within a 6-hour window.
 - **Operations Dashboard:** Real-time KPI tracking, keyword search, status workflows, and CSV export.
 
+## NEED TO MAKE AN .env FILE IN BACKEND 
+   in this past your api key link
+
+   GEMINI_API_KEY=....
+   PORT= 5000
+
 ## ⚙️ Quick Setup
 1. Clone the repository and install dependencies in the backend:
    ```bash
